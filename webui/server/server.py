@@ -18,7 +18,7 @@ logging.getLogger('werkzeug').setLevel(logging.ERROR)
 logger = logging.getLogger(__name__)
 
 # Edit this to match the serial port name shown in Arduino IDE
-SERIAL_PORT = "/dev/ttyACM0"
+SERIAL_PORT = "COM3"
 HTTP_PORT = 5000
 
 # Threads for the serial reader and writer.
@@ -27,7 +27,7 @@ write_thread = Thread()
 thread_stop_event = Event()
 
 # L, D, U, R
-sensor_numbers = [3, 2, 0, 1]
+sensor_numbers = [0, 1, 2, 3]
 
 hostname = socket.gethostname()
 ip_address = socket.gethostbyname(hostname)
