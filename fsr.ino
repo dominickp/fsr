@@ -3,7 +3,10 @@
 #ifdef CORE_TEENSY
   // Use the Joystick library for Teensy
   void ButtonStart() {
-    Joystick.begin();
+    // Use Joystick.begin() for everything that's not Teensy 2.0.
+    #ifndef __AVR_ATmega32U4__
+      Joystick.begin();
+    #endif
     Joystick.useManualSend(true);
   }
   void ButtonPress(uint8_t button_num) {
@@ -13,6 +16,7 @@
     Joystick.button(button_num, 0);
   }
 #else
+  #include <Keyboard.h>
   // And the Keyboard library for Arduino
   void ButtonStart() {
     Keyboard.begin();
@@ -28,9 +32,9 @@
 // Default threshold value for each of the sensors.
 const int16_t kDefaultThreshold = 200;
 // Max window size for both of the moving averages classes.
-const size_t kWindowSize = 100;
+const size_t kWindowSize = 50;
 // Baud rate used for Serial communication. Technically ignored by Teensys.
-const int32_t kBaudRate = 115200;
+const long kBaudRate = 115200;
 
 // We don't want to use digital pins 0 and 1 as they're needed for Serial
 // communication.
@@ -44,7 +48,9 @@ const int32_t kBaudRate = 115200;
 // then restrict back down to 16-bits.
 class WeightedMovingAverage {
  public:
-  WeightedMovingAverage(size_t size) : size_(min(size, kWindowSize)) {}
+  WeightedMovingAverage(size_t size) :
+      size_(min(size, kWindowSize)), cur_sum_(0), cur_weighted_sum_(0),
+      values_{}, cur_count_(0) {}
 
   int16_t GetAverage(int16_t value) {
     // Add current value and remove oldest value.
@@ -213,7 +219,7 @@ const size_t kNumSensors = sizeof(kSensorStates)/sizeof(SensorState);
 
 class SerialProcessor {
  public:
-   void Init(unsigned int baud_rate) {
+   void Init(long baud_rate) {
     Serial.begin(baud_rate);
   }
 
