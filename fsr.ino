@@ -1,5 +1,80 @@
 #include <inttypes.h>
 
+// BEGIN DOM'S FASTLED SETUP
+#include <FastLED.h>
+#define NUM_LEDS 10
+#define DATA_PIN 10
+#define CLOCK_PIN 11
+CRGB leds[NUM_LEDS];
+
+// This is a map of panel leds. The order of the array cooresponds to the 
+// button number while the value is the FastLED LED number in the strip.
+// Button numbers start at 1 so 0 isn't used, which is why the underglow is there.
+int16_t PANEL_LED[] = {
+  0,  // Underglow
+  4,  // Left
+  2,  // Up
+  6,  // Down
+  9,  // Right
+  1,  // Up Left
+  3,  // Up Right
+  8,  // Down Right
+  7,  // Center
+  5,  // Down Left
+ };
+ const size_t kNumLeds = sizeof(PANEL_LED) / sizeof(int16_t);
+
+
+// Set the color profile for the lights
+// 0 = Test
+// 1 = ITG
+// 2 = DDR
+// 3 = Brazil
+// 4 = Frozen
+// 5 = Italy
+// 6 = One at a time test
+// 7 = Princess
+// 8 = Navi
+// 9 = USA
+// 10 = Gadsden
+int COLOR_PROFILE = 3;
+
+// Idle lights, light up when the panel isn't being pressed
+CRGB IDLE_COLORS[][10] = {
+            // Underglow,       Left,             Up,               Down,             Right,            Up-Left,          Up-Right,         Down-Right,       Center,           Down Left
+  /* Test   */ {CRGB::Blue,     CRGB::Gold,       CRGB::Red,        CRGB::Green,      CRGB::Purple,     CRGB::SkyBlue,    CRGB::Blue,       CRGB::Tomato,     CRGB::Green,      CRGB::Pink},
+  /* ITG    */ {CRGB::Blue,     CRGB::Blue,       CRGB::Red,        CRGB::Red,        CRGB::Blue,       CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black},
+  /* DDR    */ {CRGB::Blue,     CRGB::DeepSkyBlue,CRGB::DeepPink,   CRGB::DeepPink,   CRGB::DeepSkyBlue,CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black},
+  /* Brazil */ {CRGB::Blue,     CRGB::Gold,       CRGB::Gold,       CRGB::Gold,       CRGB::Gold,       CRGB::Green,      CRGB::Green,      CRGB::Green,      CRGB::Green,      CRGB::Green,},
+  /* Frozen */ {CRGB::Blue,     CRGB::White,      CRGB::White,      CRGB::White,      CRGB::White,      CRGB::White,      CRGB::White,      CRGB::White,      CRGB::White,      CRGB::White},
+  /* Italy  */ {CRGB::Blue,     CRGB::Green,      CRGB::White,      CRGB::White,      CRGB::Red,        CRGB::Green,      CRGB::Red,        CRGB::Red,        CRGB::White,      CRGB::Green},
+  /* One    */ {CRGB::Black,    CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::White},
+  /* Prncss */ {CRGB::Magenta,  CRGB::MediumPurple,CRGB::MediumPurple,CRGB::MediumPurple,CRGB::MediumPurple,CRGB::Magenta,CRGB::Magenta,    CRGB::Magenta,    CRGB::Magenta,    CRGB::Magenta},
+  /* Navi   */ {CRGB::Blue,     CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Green,      CRGB::Green,      CRGB::Green,      CRGB::Green,      CRGB::Green},
+  /* USA    */ {CRGB::Blue,     CRGB::Red,        CRGB::Red,        CRGB::Red,        CRGB::Red,        CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue},
+  /* Gadsden*/ {CRGB::Gold,     CRGB::Gold,       CRGB::Gold,       CRGB::Gold,       CRGB::Gold,       CRGB::Gold,       CRGB::Gold,       CRGB::Gold,       CRGB::Gold,       CRGB::Gold},
+};
+
+// Active lights, light up when the panel is pressed
+CRGB ALL_WHITE[10] = {CRGB::Blue, CRGB::White, CRGB::White, CRGB::White, CRGB::White, CRGB::White, CRGB::White, CRGB::White, CRGB::White, CRGB::White};
+CRGB ACTIVE_COLORS[][10] = {
+            // Underglow,       Left,             Up,               Down,             Right,            Up-Left,          Up-Right,         Down-Right,       Center,           Down Left
+  /* Test   */ ALL_WHITE, 
+  /* ITG    */ ALL_WHITE, 
+  /* DDR    */ ALL_WHITE, 
+  /* Brazil */ ALL_WHITE, 
+  /* Frozen */ {CRGB::Black,    CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue}, 
+  /* Italy  */ {CRGB::Blue,     CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue}, 
+  /* One    */ ALL_WHITE, 
+  /* Prncss */ {CRGB::Blue,     CRGB::Gold,       CRGB::Gold,       CRGB::Gold,       CRGB::Gold,       CRGB::Gold,       CRGB::Gold,       CRGB::Gold,       CRGB::Gold,       CRGB::Gold}, 
+  /* Navi   */ ALL_WHITE, 
+  /* USA    */ ALL_WHITE, 
+  /* Gadsden*/ {CRGB::Gold,     CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black}, 
+};
+
+// END DOM'S FASTLED SETUP
+
+
 #ifdef CORE_TEENSY
   // Use the Joystick library for Teensy
   void ButtonStart() {
@@ -145,19 +220,33 @@ class SensorState {
     #endif
 
     if (willSend) {
+      int16_t panel_led = PANEL_LED[button_num];
+
       if (cur_value_ >= user_threshold_ + kPaddingWidth &&
           state_ == SensorState::OFF) {
         ButtonPress(button_num);
         state_ = SensorState::ON;
         last_trigger_ms_ = curMillis;
+        // Light on
         digitalWrite(button_num - 1 + DIGITAL_PIN_OFFSET, HIGH);
+        // Set panel LED to active color
+        leds[panel_led] = ACTIVE_COLORS[COLOR_PROFILE][button_num];
+        // Do the underglow too
+        leds[0] = ACTIVE_COLORS[COLOR_PROFILE][0];
+        FastLED.show();
       }
       
       if (cur_value_ < user_threshold_ - kPaddingWidth &&
           state_ == SensorState::ON) {
         ButtonRelease(button_num);
         state_ = SensorState::OFF;
+        // Light off
         digitalWrite(button_num - 1 + DIGITAL_PIN_OFFSET, LOW);
+        // Reset panel LED back to idle color (or off, if black)
+        leds[panel_led] = IDLE_COLORS[COLOR_PROFILE][button_num];
+        // Do the underglow too
+        leds[0] = IDLE_COLORS[COLOR_PROFILE][0];
+        FastLED.show();
       }
     }
 
@@ -223,6 +312,11 @@ SensorState kSensorStates[] = {
   SensorState(A1),
   SensorState(A2),
   SensorState(A3),
+//  SensorState(A4),
+//  SensorState(A5),
+//  SensorState(A6),
+//  SensorState(A7),
+//  SensorState(A8),
 };
 const size_t kNumSensors = sizeof(kSensorStates)/sizeof(SensorState);
 
@@ -254,6 +348,10 @@ class SerialProcessor {
         case 't':
         case 'T':
           PrintThresholds();
+          break;
+        case 'c':
+        case 'C':
+          UpdateColorProfile(bytes_read);
           break;
         default:
           UpdateAndPrintThreshold(bytes_read);
@@ -301,6 +399,30 @@ class SerialProcessor {
     }
     Serial.print("\n");
   }
+  
+  void PrintColorProfile() {
+    Serial.print("c");
+    Serial.print(" ");
+    Serial.print(COLOR_PROFILE);
+    Serial.print("\n");
+  }
+  
+  void UpdateColorProfile(size_t bytes_read) {
+    // Need to specify:
+    // C + color profile.
+    // e.g. C3 (selects third color profile)
+
+    // If the value isn't there (just "C") only print the profile
+    if (bytes_read < 2 || bytes_read > 5) { 
+      PrintColorProfile(); 
+      return;
+    }
+    // Update the COLOR_PROFILE variable with whatever the value is
+    COLOR_PROFILE = strtoul(buffer_ + 1, nullptr, 10);
+    // Print it out
+    PrintColorProfile();
+  }
+
 
  private:
    static const size_t kBufferSize = 64;
@@ -318,11 +440,27 @@ unsigned long lastSend = 0;
 long loopTime = -1;
 
 void setup() {
+
+  // Add the LEDs
+  FastLED.addLeds<P9813, DATA_PIN, CLOCK_PIN , RGB>(leds, NUM_LEDS).setCorrection(TypicalSMD5050).setTemperature(CarbonArc);   
+  
+  // Set each light to its idle color on start
+  // ... kNumSensors = number of sensors + 1 (for the underglow)
+  for( size_t k=0; k < kNumLeds; k++) {
+    int button_num = k;
+    int panel_led = PANEL_LED[button_num];
+    leds[panel_led] = IDLE_COLORS[COLOR_PROFILE][button_num];
+  }
+  
+  FastLED.show();
+
+  
   serialProcessor.Init(kBaudRate);
   ButtonStart();
   for (size_t i = 0; i < kNumSensors; ++i) {
     pinMode(i + DIGITAL_PIN_OFFSET, OUTPUT);
   }
+
 }
 
 void loop() {
@@ -350,4 +488,5 @@ void loop() {
   if (loopTime == -1) {
     loopTime = micros() - startMicros;
   }
+  
 }

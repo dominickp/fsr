@@ -262,6 +262,42 @@ function WebUI() {
   );
 }
 
+function DomConfig() {
+  const [colorProfile, setColorProfile] = useState(0);
+
+  function handleChange(event) {
+    let color = event.target.value;
+    setColorProfile(color);
+    console.log("update_color_profile", color);
+    socket.emit('update_color_profile', color);
+  }
+
+  return (
+    <div>
+      <h1>Dom's Special Config</h1>
+      <h2>Color Profile</h2>
+      <form>
+        <label>
+          Pad color profile:<br />
+          <select value={colorProfile} onChange={handleChange}>
+            <option value="0">Test</option>
+            <option value="1">ITG</option>
+            <option value="2">DDR</option>
+            <option value="3">Brazil</option>
+            <option value="4">Frozen</option>
+            <option value="5">Italy</option>
+            <option value="6">One at a time test</option>
+            <option value="7">Princess</option>
+            <option value="8">Navi</option>
+            <option value="9">USA</option>
+            <option value="10">Gadsden</option>
+          </select>
+        </label>
+      </form>
+    </div>
+  )
+}
+
 function Plot() {
   const canvasRef = React.useRef(null);
   const colors = ['red', 'orange', 'green', 'blue'];
@@ -484,6 +520,9 @@ function App() {
               <Nav.Item>
                 <Nav.Link as={Link} to="/plot">Plot</Nav.Link>
               </Nav.Item>
+              <Nav.Item>
+                <Nav.Link as={Link} to="/dom-config">Dom's Special Config</Nav.Link>
+              </Nav.Item>
             </Nav>
             <Nav className="ml-auto">
               <NavDropdown alignRight title="Profile" id="collasible-nav-dropdown">
@@ -521,6 +560,9 @@ function App() {
             </Route>
             <Route path="/plot">
               <Plot />
+            </Route>
+            <Route path="/dom-config">
+              <DomConfig />
             </Route>
           </Switch>
         </Router>

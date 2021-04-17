@@ -340,6 +340,15 @@ def update_threshold(values, index):
   except queue.Full as e:
     logger.error('Could not update thresholds. Queue full.')
 
+@socketio.on('update_color_profile')
+def update_color_profile(value):
+  try:
+    # Let the writer thread handle updating thresholds.
+    color_cmd = f"C{value}\n"
+    serial_handler.write_queue.put(color_cmd, block=False)
+  except queue.Full as e:
+    logger.error('Could not update color profile. Queue full.')
+
 @socketio.on('add_profile')
 def add_profile(profile_name, thresholds):
   profile_handler.AddProfile(profile_name, thresholds)
