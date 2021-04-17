@@ -72,6 +72,17 @@ CRGB ACTIVE_COLORS[][10] = {
   /* Gadsden*/ {CRGB::Gold,     CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black}, 
 };
 
+void setIdleColors() {
+  // Set each light to its idle color
+  // ... kNumSensors = number of sensors + 1 (for the underglow)
+  for( size_t k=0; k < kNumLeds; k++) {
+    int button_num = k;
+    int panel_led = PANEL_LED[button_num];
+    leds[panel_led] = IDLE_COLORS[COLOR_PROFILE][button_num];
+  }
+  FastLED.show();
+}
+
 // END DOM'S FASTLED SETUP
 
 
@@ -421,6 +432,8 @@ class SerialProcessor {
     COLOR_PROFILE = strtoul(buffer_ + 1, nullptr, 10);
     // Print it out
     PrintColorProfile();
+    // Set the new idle colors
+    setIdleColors();
   }
 
 
@@ -445,16 +458,8 @@ void setup() {
   FastLED.addLeds<P9813, DATA_PIN, CLOCK_PIN , RGB>(leds, NUM_LEDS).setCorrection(TypicalSMD5050).setTemperature(CarbonArc);   
   
   // Set each light to its idle color on start
-  // ... kNumSensors = number of sensors + 1 (for the underglow)
-  for( size_t k=0; k < kNumLeds; k++) {
-    int button_num = k;
-    int panel_led = PANEL_LED[button_num];
-    leds[panel_led] = IDLE_COLORS[COLOR_PROFILE][button_num];
-  }
-  
-  FastLED.show();
+  setIdleColors();
 
-  
   serialProcessor.Init(kBaudRate);
   ButtonStart();
   for (size_t i = 0; i < kNumSensors; ++i) {
