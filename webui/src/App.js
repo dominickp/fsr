@@ -290,7 +290,22 @@ function DomConfig() {
             <option value="7">Princess</option>
             <option value="8">Navi</option>
             <option value="9">USA</option>
-            <option value="10">Gadsden</option>
+            <option value="10">Yellow → Black</option>
+            <option value="11">Red → Black</option>
+            <option value="12">Blue → Black</option>
+            <option value="13">Green → Black</option>
+            <option value="14">White → Black</option>
+            <option value="15">Black → White</option>
+            <option value="16">Black → Red</option>
+            <option value="17">Black → Blue</option>
+            <option value="18">Black → Green</option>
+            <option value="19">UNSET</option>
+            <option value="20">UNSET</option>
+            <option value="21">UNSET</option>
+            <option value="22">UNSET</option>
+            <option value="23">UNSET</option>
+            <option value="24">UNSET</option>
+            <option value="25">UNSET</option>
           </select>
         </label>
       </form>
