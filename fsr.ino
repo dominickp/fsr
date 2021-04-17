@@ -24,53 +24,75 @@ int16_t PANEL_LED[] = {
  };
  const size_t kNumLeds = sizeof(PANEL_LED) / sizeof(int16_t);
 
-
 // Set the color profile for the lights
-// 0 = Test
-// 1 = ITG
-// 2 = DDR
-// 3 = Brazil
-// 4 = Frozen
-// 5 = Italy
-// 6 = One at a time test
-// 7 = Princess
-// 8 = Navi
-// 9 = USA
-// 10 = Gadsden
-int COLOR_PROFILE = 10;
+int COLOR_PROFILE = 0;
+
+// Re-usable palletes
+CRGB ALL_WHITE[10] = {CRGB::Blue,   CRGB::White, CRGB::White, CRGB::White, CRGB::White, CRGB::White, CRGB::White, CRGB::White, CRGB::White, CRGB::White};
+CRGB ALL_BLACK[10] = {CRGB::Black,  CRGB::Black, CRGB::Black, CRGB::Black, CRGB::Black, CRGB::Black, CRGB::Black, CRGB::Black, CRGB::Black, CRGB::Black};
+CRGB ALL_RED[10]   = {CRGB::Red,    CRGB::Red,   CRGB::Red,   CRGB::Red,   CRGB::Red,   CRGB::Red,   CRGB::Red,   CRGB::Red,   CRGB::Red,   CRGB::Red};
+CRGB ALL_BLUE[10]  = {CRGB::Blue,   CRGB::Blue,  CRGB::Blue,  CRGB::Blue,  CRGB::Blue,  CRGB::Blue,  CRGB::Blue,  CRGB::Blue,  CRGB::Blue,  CRGB::Blue};
+CRGB ALL_GREEN[10] = {CRGB::Green,  CRGB::Green, CRGB::Green, CRGB::Green, CRGB::Green, CRGB::Green, CRGB::Green, CRGB::Green, CRGB::Green, CRGB::Green};
+CRGB ALL_GOLD[10]  = {CRGB::Gold,   CRGB::Gold,  CRGB::Gold,  CRGB::Gold,  CRGB::Gold,  CRGB::Gold,  CRGB::Gold,  CRGB::Gold,  CRGB::Gold,  CRGB::Gold};
 
 // Idle lights, light up when the panel isn't being pressed
 CRGB IDLE_COLORS[][10] = {
-            // Underglow,       Left,             Up,               Down,             Right,            Up-Left,          Up-Right,         Down-Right,       Center,           Down Left
-  /* Test   */ {CRGB::Blue,     CRGB::Gold,       CRGB::Red,        CRGB::Green,      CRGB::Purple,     CRGB::SkyBlue,    CRGB::Blue,       CRGB::Tomato,     CRGB::Green,      CRGB::Pink},
-  /* ITG    */ {CRGB::Blue,     CRGB::Blue,       CRGB::Red,        CRGB::Red,        CRGB::Blue,       CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black},
-  /* DDR    */ {CRGB::Blue,     CRGB::DeepSkyBlue,CRGB::DeepPink,   CRGB::DeepPink,   CRGB::DeepSkyBlue,CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black},
-  /* Brazil */ {CRGB::Blue,     CRGB::Gold,       CRGB::Gold,       CRGB::Gold,       CRGB::Gold,       CRGB::Green,      CRGB::Green,      CRGB::Green,      CRGB::Green,      CRGB::Green,},
-  /* Frozen */ {CRGB::Blue,     CRGB::White,      CRGB::White,      CRGB::White,      CRGB::White,      CRGB::White,      CRGB::White,      CRGB::White,      CRGB::White,      CRGB::White},
-  /* Italy  */ {CRGB::Blue,     CRGB::Green,      CRGB::White,      CRGB::White,      CRGB::Red,        CRGB::Green,      CRGB::Red,        CRGB::Red,        CRGB::White,      CRGB::Green},
-  /* One    */ {CRGB::Black,    CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::White},
-  /* Prncss */ {CRGB::Magenta,  CRGB::MediumPurple,CRGB::MediumPurple,CRGB::MediumPurple,CRGB::MediumPurple,CRGB::Magenta,CRGB::Magenta,    CRGB::Magenta,    CRGB::Magenta,    CRGB::Magenta},
-  /* Navi   */ {CRGB::Blue,     CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Green,      CRGB::Green,      CRGB::Green,      CRGB::Green,      CRGB::Green},
-  /* USA    */ {CRGB::Blue,     CRGB::Red,        CRGB::Red,        CRGB::Red,        CRGB::Red,        CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue},
-  /* Gadsden*/ {CRGB::Gold,     CRGB::Gold,       CRGB::Gold,       CRGB::Gold,       CRGB::Gold,       CRGB::Gold,       CRGB::Gold,       CRGB::Gold,       CRGB::Gold,       CRGB::Gold},
+               // Underglow,       Left,             Up,               Down,             Right,            Up-Left,          Up-Right,         Down-Right,       Center,           Down Left
+  /* 0  Test   */ {CRGB::Blue,     CRGB::Gold,       CRGB::Red,        CRGB::Green,      CRGB::Purple,     CRGB::SkyBlue,    CRGB::Blue,       CRGB::Tomato,     CRGB::Green,      CRGB::Pink},
+  /* 1  ITG    */ {CRGB::Blue,     CRGB::Blue,       CRGB::Red,        CRGB::Red,        CRGB::Blue,       CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black},
+  /* 2  DDR    */ {CRGB::Blue,     CRGB::DeepSkyBlue,CRGB::DeepPink,   CRGB::DeepPink,   CRGB::DeepSkyBlue,CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black},
+  /* 3  Brazil */ {CRGB::Blue,     CRGB::Gold,       CRGB::Gold,       CRGB::Gold,       CRGB::Gold,       CRGB::Green,      CRGB::Green,      CRGB::Green,      CRGB::Green,      CRGB::Green,},
+  /* 4  Frozen */ {CRGB::Blue,     CRGB::White,      CRGB::White,      CRGB::White,      CRGB::White,      CRGB::White,      CRGB::White,      CRGB::White,      CRGB::White,      CRGB::White},
+  /* 5  Italy  */ {CRGB::Blue,     CRGB::Green,      CRGB::White,      CRGB::White,      CRGB::Red,        CRGB::Green,      CRGB::Red,        CRGB::Red,        CRGB::White,      CRGB::Green},
+  /* 6  One    */ {CRGB::Black,    CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::White},
+  /* 7  Prncss */ {CRGB::Magenta,  CRGB::MediumPurple,CRGB::MediumPurple,CRGB::MediumPurple,CRGB::MediumPurple,CRGB::Magenta,CRGB::Magenta,    CRGB::Magenta,    CRGB::Magenta,    CRGB::Magenta},
+  /* 8  Navi   */ {CRGB::Blue,     CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Green,      CRGB::Green,      CRGB::Green,      CRGB::Green,      CRGB::Green},
+  /* 9  USA    */ {CRGB::Blue,     CRGB::Red,        CRGB::Red,        CRGB::Red,        CRGB::Red,        CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue},
+  /* 10 Y->BLK */ ALL_GOLD,
+  /* 11 R->BLK */ ALL_RED,
+  /* 12 B->BLK */ ALL_BLUE,
+  /* 13 G->BLK */ ALL_GREEN,
+  /* 14 W->BLK */ ALL_WHITE,
+  /* 15 BLK->W */ ALL_BLACK,
+  /* 16 BLK->R */ ALL_BLACK,
+  /* 17 BLK->B */ ALL_BLACK,
+  /* 18 BLK->G */ ALL_BLACK,
 };
 
 // Active lights, light up when the panel is pressed
-CRGB ALL_WHITE[10] = {CRGB::Blue, CRGB::White, CRGB::White, CRGB::White, CRGB::White, CRGB::White, CRGB::White, CRGB::White, CRGB::White, CRGB::White};
 CRGB ACTIVE_COLORS[][10] = {
-            // Underglow,       Left,             Up,               Down,             Right,            Up-Left,          Up-Right,         Down-Right,       Center,           Down Left
-  /* Test   */ ALL_WHITE, 
-  /* ITG    */ ALL_WHITE, 
-  /* DDR    */ ALL_WHITE, 
-  /* Brazil */ ALL_WHITE, 
-  /* Frozen */ {CRGB::Black,    CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue}, 
-  /* Italy  */ {CRGB::Blue,     CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue}, 
-  /* One    */ ALL_WHITE, 
-  /* Prncss */ {CRGB::Blue,     CRGB::Gold,       CRGB::Gold,       CRGB::Gold,       CRGB::Gold,       CRGB::Gold,       CRGB::Gold,       CRGB::Gold,       CRGB::Gold,       CRGB::Gold}, 
-  /* Navi   */ ALL_WHITE, 
-  /* USA    */ ALL_WHITE, 
-  /* Gadsden*/ {CRGB::Gold,     CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black}, 
+               // Underglow,       Left,             Up,               Down,             Right,            Up-Left,          Up-Right,         Down-Right,       Center,           Down Left
+  /* 0  Test   */ ALL_WHITE, 
+  /* 1  ITG    */ ALL_WHITE, 
+  /* 2  DDR    */ ALL_WHITE, 
+  /* 3  Brazil */ ALL_WHITE, 
+  /* 4  Frozen */ {CRGB::Black,    CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue}, 
+  /* 5  Italy  */ {CRGB::Blue,     CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue,       CRGB::Blue}, 
+  /* 6  One    */ ALL_WHITE, 
+  /* 7  Prncss */ {CRGB::Blue,     CRGB::Gold,       CRGB::Gold,       CRGB::Gold,       CRGB::Gold,       CRGB::Gold,       CRGB::Gold,       CRGB::Gold,       CRGB::Gold,       CRGB::Gold}, 
+  /* 8  Navi   */ ALL_WHITE,
+  /* 9  USA    */ ALL_WHITE,
+  /* 10 Y->BLK */ ALL_BLACK,
+  /* 11 R->BLK */ ALL_BLACK,
+  /* 12 B->BLK */ ALL_BLACK,
+  /* 13 G->BLK */ ALL_BLACK,
+  /* 14 W->BLK */ ALL_BLACK,
+  /* 15 BLK->W */ ALL_WHITE,
+  /* 16 BLK->R */ ALL_RED,
+  /* 17 BLK->B */ ALL_BLUE,
+  /* 18 BLK->G */ ALL_GREEN,
 };
+
+void setIdleColors() {
+  // Set each light to its idle color
+  // ... kNumSensors = number of sensors + 1 (for the underglow)
+  for( size_t k=0; k < kNumLeds; k++) {
+    int button_num = k;
+    int panel_led = PANEL_LED[button_num];
+    leds[panel_led] = IDLE_COLORS[COLOR_PROFILE][button_num];
+  }
+  FastLED.show();
+}
 
 // END DOM'S FASTLED SETUP
 
@@ -349,6 +371,10 @@ class SerialProcessor {
         case 'T':
           PrintThresholds();
           break;
+        case 'c':
+        case 'C':
+          UpdateColorProfile(bytes_read);
+          break;
         default:
           UpdateAndPrintThreshold(bytes_read);
           break;
@@ -395,6 +421,32 @@ class SerialProcessor {
     }
     Serial.print("\n");
   }
+  
+  void PrintColorProfile() {
+    Serial.print("c");
+    Serial.print(" ");
+    Serial.print(COLOR_PROFILE);
+    Serial.print("\n");
+  }
+  
+  void UpdateColorProfile(size_t bytes_read) {
+    // Need to specify:
+    // C + color profile.
+    // e.g. C3 (selects third color profile)
+
+    // If the value isn't there (just "C") only print the profile
+    if (bytes_read < 2 || bytes_read > 5) { 
+      PrintColorProfile(); 
+      return;
+    }
+    // Update the COLOR_PROFILE variable with whatever the value is
+    COLOR_PROFILE = strtoul(buffer_ + 1, nullptr, 10);
+    // Print it out
+    PrintColorProfile();
+    // Set the new idle colors
+    setIdleColors();
+  }
+
 
  private:
    static const size_t kBufferSize = 64;
@@ -417,16 +469,8 @@ void setup() {
   FastLED.addLeds<P9813, DATA_PIN, CLOCK_PIN , RGB>(leds, NUM_LEDS).setCorrection(TypicalSMD5050).setTemperature(CarbonArc);   
   
   // Set each light to its idle color on start
-  // ... kNumSensors = number of sensors + 1 (for the underglow)
-  for( size_t k=0; k < kNumLeds; k++) {
-    int button_num = k;
-    int panel_led = PANEL_LED[button_num];
-    leds[panel_led] = IDLE_COLORS[COLOR_PROFILE][button_num];
-  }
-  
-  FastLED.show();
+  setIdleColors();
 
-  
   serialProcessor.Init(kBaudRate);
   ButtonStart();
   for (size_t i = 0; i < kNumSensors; ++i) {
