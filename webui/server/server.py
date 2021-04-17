@@ -18,8 +18,8 @@ logging.getLogger('werkzeug').setLevel(logging.ERROR)
 logger = logging.getLogger(__name__)
 
 # Edit this to match the serial port name shown in Arduino IDE
-SERIAL_PORT = "/dev/ttyACM0"
-HTTP_PORT = 5000
+SERIAL_PORT = "COM4"
+HTTP_PORT = 4000
 
 # Threads for the serial reader and writer.
 read_thread = Thread()
@@ -27,11 +27,11 @@ write_thread = Thread()
 thread_stop_event = Event()
 
 # L, D, U, R
-sensor_numbers = [0, 1, 2, 3]
+sensor_numbers = [0, 2, 1, 3, 4, 5, 6, 7, 8]
 
 hostname = socket.gethostname()
 ip_address = socket.gethostbyname(hostname)
-print(' * WebUI can be found at: http://' + ip_address + ':5000')
+print(' * Using serial port ' + SERIAL_PORT)
 
 # Used for developmental purposes. Set this to true when you just want to
 # emulate the serial device instead of actually connecting to one.
