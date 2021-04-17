@@ -37,7 +37,7 @@ int16_t PANEL_LED[] = {
 // 8 = Navi
 // 9 = USA
 // 10 = Gadsden
-int COLOR_PROFILE = 10;
+int COLOR_PROFILE = 3;
 
 // Idle lights, light up when the panel isn't being pressed
 CRGB IDLE_COLORS[][10] = {
@@ -349,6 +349,10 @@ class SerialProcessor {
         case 'T':
           PrintThresholds();
           break;
+        case 'c':
+        case 'C':
+          UpdateColorProfile(bytes_read);
+          break;
         default:
           UpdateAndPrintThreshold(bytes_read);
           break;
@@ -395,6 +399,30 @@ class SerialProcessor {
     }
     Serial.print("\n");
   }
+  
+  void PrintColorProfile() {
+    Serial.print("c");
+    Serial.print(" ");
+    Serial.print(COLOR_PROFILE);
+    Serial.print("\n");
+  }
+  
+  void UpdateColorProfile(size_t bytes_read) {
+    // Need to specify:
+    // C + color profile.
+    // e.g. C3 (selects third color profile)
+
+    // If the value isn't there (just "C") only print the profile
+    if (bytes_read < 2 || bytes_read > 5) { 
+      PrintColorProfile(); 
+      return;
+    }
+    // Update the COLOR_PROFILE variable with whatever the value is
+    COLOR_PROFILE = strtoul(buffer_ + 1, nullptr, 10);
+    // Print it out
+    PrintColorProfile();
+  }
+
 
  private:
    static const size_t kBufferSize = 64;

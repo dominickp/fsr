@@ -18,7 +18,7 @@ logging.getLogger('werkzeug').setLevel(logging.ERROR)
 logger = logging.getLogger(__name__)
 
 # Edit this to match the serial port name shown in Arduino IDE
-SERIAL_PORT = "/dev/ttyACM0"
+SERIAL_PORT = "COM3"
 HTTP_PORT = 5000
 
 # Threads for the serial reader and writer.
@@ -339,6 +339,15 @@ def update_threshold(values, index):
     serial_handler.write_queue.put(threshold_cmd, block=False)
   except queue.Full as e:
     logger.error('Could not update thresholds. Queue full.')
+
+@socketio.on('update_color_profile')
+def update_color_profile(value):
+  try:
+    # Let the writer thread handle updating thresholds.
+    color_cmd = f"C{value}\n"
+    serial_handler.write_queue.put(color_cmd, block=False)
+  except queue.Full as e:
+    logger.error('Could not update color profile. Queue full.')
 
 @socketio.on('add_profile')
 def add_profile(profile_name, thresholds):
