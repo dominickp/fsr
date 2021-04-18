@@ -292,6 +292,7 @@ class SensorState {
     bool all_evaluated = (sensor_index == num_sensors_ - 1);
 
     if (all_evaluated) {
+	  int16_t panel_led = PANEL_LED[kButtonNum];
       switch (combined_state_) {
         case SensorState::OFF:
           {
@@ -309,7 +310,6 @@ class SensorState {
               #if defined(ENABLE_LIGHTS)
                 digitalWrite(kLightsPin, HIGH);
                 // Light on
-                digitalWrite(kButtonNum - 1 + DIGITAL_PIN_OFFSET, HIGH);
                 // Set panel LED to active color
                 leds[panel_led] = ACTIVE_COLORS[COLOR_PROFILE][kButtonNum];
                 // Do the underglow too
@@ -335,7 +335,6 @@ class SensorState {
               #if defined(ENABLE_LIGHTS)
                 digitalWrite(kLightsPin, LOW);
                 // Light off
-                digitalWrite(kButtonNum - 1 + DIGITAL_PIN_OFFSET, LOW);
                 // Reset panel LED back to idle color (or off, if black)
                 leds[panel_led] = IDLE_COLORS[COLOR_PROFILE][kButtonNum];
                 // Do the underglow too
