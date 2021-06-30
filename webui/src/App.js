@@ -299,13 +299,13 @@ function DomConfig() {
             <option value="16">Black → Red</option>
             <option value="17">Black → Blue</option>
             <option value="18">Black → Green</option>
-            <option value="19">UNSET</option>
-            <option value="20">UNSET</option>
-            <option value="21">UNSET</option>
-            <option value="22">UNSET</option>
-            <option value="23">UNSET</option>
-            <option value="24">UNSET</option>
-            <option value="25">UNSET</option>
+            <option value="19">Black → DDR</option>
+            <option value="20">Black → ITG</option>
+            <option value="21">Red → Blue</option>
+            <option value="22">Blue → Red</option>
+            <option value="23">Red → Green</option>
+            <option value="24">Green → Red</option>
+            <option value="25">Yellow → Red</option>
           </select>
         </label>
       </form>

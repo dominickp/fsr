@@ -57,6 +57,13 @@ CRGB IDLE_COLORS[][10] = {
   /* 16 BLK->R */ ALL_BLACK,
   /* 17 BLK->B */ ALL_BLACK,
   /* 18 BLK->G */ ALL_BLACK,
+  /* 19 BLK->DR*/ ALL_BLACK,
+  /* 20 BLK->IT*/ ALL_BLACK,
+  /* 21 RED->BL*/ ALL_RED,
+  /* 22 BLU->RD*/ ALL_BLUE,
+  /* 23 RED->GN*/ ALL_RED,
+  /* 24 GRE->RD*/ ALL_GREEN,
+  /* 25 YEL->RD*/ ALL_GOLD,
 };
 
 // Active lights, light up when the panel is pressed
@@ -81,6 +88,13 @@ CRGB ACTIVE_COLORS[][10] = {
   /* 16 BLK->R */ ALL_RED,
   /* 17 BLK->B */ ALL_BLUE,
   /* 18 BLK->G */ ALL_GREEN,
+  /* 19 BLK->DR*/ {CRGB::Blue,     CRGB::DeepSkyBlue,CRGB::DeepPink,   CRGB::DeepPink,   CRGB::DeepSkyBlue,CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black},
+  /* 20 BLK->IT*/ {CRGB::Blue,     CRGB::Blue,       CRGB::Red,        CRGB::Red,        CRGB::Blue,       CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black,      CRGB::Black},
+  /* 21 RED->BL*/ ALL_BLUE,
+  /* 22 BLU->RD*/ ALL_RED,
+  /* 23 RED->GN*/ ALL_GREEN,
+  /* 24 GRE->RD*/ ALL_RED,
+  /* 25 YEL->RD*/ ALL_RED,
 };
 
 void setIdleColors() {
