@@ -318,7 +318,7 @@ function DomConfig() {
     let color = event.target.value;
     setColorProfile(color);
     console.log("update_color_profile", color);
-    socket.emit('update_color_profile', color);
+    emit(['update_color_profile', color]);
   }
 
   return (
